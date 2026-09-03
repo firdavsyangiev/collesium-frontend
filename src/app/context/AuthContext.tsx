@@ -32,6 +32,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [isAuthLoading, setIsAuthLoading] = useState(true);
 
   const refreshMember = useCallback(async () => {
+    localStorage.removeItem("accessToken");
     try {
       setMember(await MemberService.getMemberDetail());
     } catch {
@@ -50,13 +51,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       isAuthLoading,
       signup: async (input) => {
         const response = await MemberService.signup(input);
-        localStorage.setItem("accessToken", response.accessToken);
         setMember(response.member);
         return response.member;
       },
       login: async (input) => {
         const response = await MemberService.login(input);
-        localStorage.setItem("accessToken", response.accessToken);
         setMember(response.member);
         return response.member;
       },

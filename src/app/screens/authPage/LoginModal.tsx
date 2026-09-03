@@ -53,6 +53,9 @@ export default function LoginModal({
               type="tel"
               value={memberPhone}
               onChange={(event) => setMemberPhone(event.target.value)}
+              maxLength={24}
+              minLength={7}
+              pattern="[+0-9()\\s-]{7,24}"
               required
               autoFocus
             />
@@ -63,7 +66,7 @@ export default function LoginModal({
               type="password"
               value={memberPassword}
               onChange={(event) => setMemberPassword(event.target.value)}
-              minLength={6}
+              maxLength={72}
               required
             />
           </label>

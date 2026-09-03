@@ -55,6 +55,7 @@ export default function SignupModal({
             <input
               value={memberNick}
               onChange={(event) => setMemberNick(event.target.value)}
+              maxLength={40}
               minLength={2}
               required
             />
@@ -65,6 +66,9 @@ export default function SignupModal({
               type="tel"
               value={memberPhone}
               onChange={(event) => setMemberPhone(event.target.value)}
+              maxLength={24}
+              minLength={7}
+              pattern="[+0-9()\\s-]{7,24}"
               required
             />
           </label>
@@ -74,7 +78,8 @@ export default function SignupModal({
               type="password"
               value={memberPassword}
               onChange={(event) => setMemberPassword(event.target.value)}
-              minLength={6}
+              maxLength={72}
+              minLength={8}
               required
             />
           </label>
