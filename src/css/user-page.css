@@ -30,10 +30,10 @@
 .profile-error { color: #972d26; background: #fce9e7; }
 .profile-success { color: #205f32; background: #e5f5e9; }
 .profile-save { margin-top: 24px; }
-.profile-state, .profile-auth-required { min-height: 68vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 50px 20px; text-align: center; }
+.profile-state, .profile-auth-required { width: 100%; min-height: 68vh; flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; margin: 0 auto; padding: 50px 20px; text-align: center; }
 .profile-auth-required h1 { margin: 14px 0; font: 900 clamp(44px, 7vw, 76px)/.95 "Montserrat", sans-serif; }
 .profile-auth-required p { margin: 0 0 28px; color: var(--muted); }
-.profile-auth-required > div { display: flex; gap: 12px; }
+.profile-auth-required > div { display: flex; justify-content: center; gap: 12px; }
 
 @media (max-width: 850px) {
   .profile-page { width: calc(100% - 40px); }

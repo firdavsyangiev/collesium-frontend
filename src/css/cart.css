@@ -34,8 +34,8 @@
 .empty-cart { min-height: 68vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 50px 20px; text-align: center; }
 .empty-cart h1 { margin: 14px 0; font: 900 clamp(44px, 7vw, 76px)/.95 "Montserrat", sans-serif; }
 .empty-cart p { margin: 0 0 28px; color: var(--muted); }
-.cart-link { position: relative; }
-.cart-link span { min-width: 17px; height: 17px; display: inline-grid; place-items: center; margin-left: 5px; border-radius: 50%; color: var(--white); background: var(--accent); font-size: 9px; }
+.cart-link { position: relative; display: inline-flex; align-items: center; min-height: 28px; line-height: 1; }
+.cart-link span { min-width: 17px; height: 17px; display: inline-grid; place-items: center; margin-left: 5px; border-radius: 50%; color: var(--white); background: var(--accent); font-size: 9px; line-height: 1; }
 
 @media (max-width: 960px) {
   .cart-page { width: calc(100% - 40px); }
