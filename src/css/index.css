@@ -45,7 +45,7 @@ button { cursor: pointer; }
 .member-actions > button { color: #922e28; }
 .auth-loading { color: var(--muted); font-size: 9px; }
 
-.hero { position: relative; min-height: 680px; display: flex; align-items: center; overflow: hidden; color: var(--white); background: var(--black) url("https://lh3.googleusercontent.com/aida-public/AB6AXuBxtf5uDg632vNbGujeaUp_cp17YOi8UfA12UdfdGhvxk7CNv9uXCzCnpJoBsfH6PgbPaGZRmNjEekz8reRc0uYvPx0VXVt5gVGgP5ITHxV6BjBguXrt7Q7sfA0cn6n4D-7mEJM6gb29PWdXe62tPOmHv0RvtCvy7fH3BX6FOeVoxWyjVd_VrER7Mwxsk7NdKhI6wGNwzkqOWcV_iIbaiVd2zLg1Fphg9YUaEsHg2E5CFTbIKPnKKY") center/cover no-repeat; }
+.hero { position: relative; min-height: 680px; display: flex; align-items: center; overflow: hidden; color: var(--white); background: var(--black) url("../assets/home-hero.png") center/cover no-repeat; }
 .hero-shade { position: absolute; inset: 0; background: linear-gradient(90deg, rgba(0,0,0,.9), rgba(0,0,0,.25)); }
 .hero-content { position: relative; width: min(100% - 96px, var(--content-width)); margin: auto; }
 .hero h1 { max-width: 850px; margin: 18px 0; font-family: "Montserrat", sans-serif; font-size: clamp(52px, 7vw, 92px); line-height: .95; letter-spacing: -.055em; font-weight: 900; }
