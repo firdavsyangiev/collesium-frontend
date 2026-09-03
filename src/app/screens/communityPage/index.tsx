@@ -1,0 +1,132 @@
+import { FormEvent, useState } from "react";
+import "../../../css/community.css";
+
+type CommunityTab = "terms" | "faq" | "contact";
+
+const guidelines = [
+  "Respect the grind. Support other members and protect the athletic integrity of the community.",
+  "Training and nutrition advice shared by members is peer-to-peer and does not replace professional consultation.",
+  "Unauthorized promotion of third-party supplements or apparel is not allowed in Collesium channels.",
+  "Orders and returns follow the Collesium store policy. Products must be returned in their original condition.",
+  "By joining Collesium activities, you agree to uphold our standards of discipline, respect and fair play.",
+];
+
+const questions = [
+  {
+    question: "How do I choose the right fit for compression gear?",
+    answer: "Compression gear is designed for a close, locked-in fit. Choose your usual size for maximum support, or size up when you prefer more room during training.",
+  },
+  {
+    question: "What is the standard delivery time?",
+    answer: "Delivery time depends on the destination and the option selected during checkout. Your current order status is always available on the Orders page.",
+  },
+  {
+    question: "Are my payment details secure?",
+    answer: "Collesium currently uses manual payment verification. The store does not ask you to save card details in your Collesium profile.",
+  },
+  {
+    question: "How can I cancel an order?",
+    answer: "Open the Orders page and cancel the order while it is still in PAUSE status. Orders already being processed cannot be cancelled from the website.",
+  },
+];
+
+const heroImage = "https://lh3.googleusercontent.com/aida-public/AB6AXuCMzpCOLDZfW9a8bEbEb9qlON9MF-vZOs5HQYKtVdBZ0P4ibnaw4jC923Hea4kjcdphXyIBTtaNBADc0I685wVZV3zwvNAd3dpYoWbETqgBjQfoclphT1sVYt0JF4EWkML07rnhMZIzrVhXSLY7uyaGSs9Fmwm341s7nPajJGdNUjN6W5JqXb9gfha-cm9lrIJlXu8CP3Wjmb0PLYipqKGZC1E7B6NG3t84XJ6CU3GLbZlVzEqTr80";
+
+export default function CommunityPage() {
+  const [activeTab, setActiveTab] = useState<CommunityTab>("terms");
+  const [openQuestion, setOpenQuestion] = useState<number | null>(0);
+
+  const handleContact = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const form = new FormData(event.currentTarget);
+    const name = String(form.get("name") || "").trim();
+    const email = String(form.get("email") || "").trim();
+    const message = String(form.get("message") || "").trim();
+    const subject = encodeURIComponent(`Collesium support request from ${name}`);
+    const body = encodeURIComponent(`Name: ${name}\nEmail: ${email}\n\n${message}`);
+    window.location.href = `mailto:support@collesium.com?subject=${subject}&body=${body}`;
+  };
+
+  return (
+    <main className="community-page">
+      <section className="community-hero">
+        <img src={heroImage} alt="Athlete training in a Collesium gym" />
+        <div>
+          <h1>THE COLLESIUM</h1>
+          <p>Resources, support and a community for athletes dedicated to going beyond.</p>
+        </div>
+      </section>
+
+      <section className="community-content">
+        <div className="community-tabs" role="tablist" aria-label="Community information">
+          {(["terms", "faq", "contact"] as CommunityTab[]).map((tab) => (
+            <button
+              aria-selected={activeTab === tab}
+              className={activeTab === tab ? "active" : ""}
+              key={tab}
+              role="tab"
+              type="button"
+              onClick={() => setActiveTab(tab)}
+            >
+              {tab.toUpperCase()}
+            </button>
+          ))}
+        </div>
+
+        {activeTab === "terms" && (
+          <article className="community-panel" role="tabpanel">
+            <span className="eyebrow">OUR STANDARD</span>
+            <h2>COMMUNITY GUIDELINES</h2>
+            <ol className="community-guidelines">
+              {guidelines.map((guideline) => <li key={guideline}>{guideline}</li>)}
+            </ol>
+          </article>
+        )}
+
+        {activeTab === "faq" && (
+          <div className="community-faq" role="tabpanel">
+            {questions.map((item, index) => {
+              const isOpen = openQuestion === index;
+              return (
+                <article className={isOpen ? "open" : ""} key={item.question}>
+                  <button
+                    aria-expanded={isOpen}
+                    type="button"
+                    onClick={() => setOpenQuestion(isOpen ? null : index)}
+                  >
+                    <span>{item.question}</span>
+                    <b aria-hidden="true">{isOpen ? "−" : "+"}</b>
+                  </button>
+                  {isOpen && <p>{item.answer}</p>}
+                </article>
+              );
+            })}
+          </div>
+        )}
+
+        {activeTab === "contact" && (
+          <article className="community-panel contact-panel" role="tabpanel">
+            <span className="eyebrow">WE ARE HERE TO HELP</span>
+            <h2>CONTACT US</h2>
+            <p>Send your question to the Collesium support team.</p>
+            <form onSubmit={handleContact}>
+              <label>
+                YOUR NAME
+                <input name="name" placeholder="Type your name here" required />
+              </label>
+              <label>
+                YOUR EMAIL
+                <input name="email" type="email" placeholder="Type your email here" required />
+              </label>
+              <label>
+                MESSAGE
+                <textarea name="message" rows={6} placeholder="Your message" required />
+              </label>
+              <button className="button button-dark" type="submit">SEND MESSAGE</button>
+            </form>
+          </article>
+        )}
+      </section>
+    </main>
+  );
+}
