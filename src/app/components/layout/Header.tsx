@@ -1,4 +1,5 @@
 import { NavLink } from "react-router-dom";
+import useCart from "../../hooks/useCart";
 
 const navigation = [
   { label: "Home", path: "/" },
@@ -9,6 +10,8 @@ const navigation = [
 ];
 
 export default function Header() {
+  const { cartCount } = useCart();
+
   return (
     <header className="site-header">
       <div className="header-inner">
@@ -26,7 +29,10 @@ export default function Header() {
         </nav>
 
         <div className="header-actions" aria-label="Account actions">
-          <NavLink to="/cart" aria-label="Shopping cart">Cart</NavLink>
+          <NavLink className="cart-link" to="/cart" aria-label={`Shopping cart with ${cartCount} items`}>
+            Cart
+            {cartCount > 0 && <span>{cartCount}</span>}
+          </NavLink>
           <NavLink to="/my-page" aria-label="My profile">Profile</NavLink>
         </div>
       </div>

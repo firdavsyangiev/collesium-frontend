@@ -1,6 +1,8 @@
 import { FormEvent, useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import useCart from "../../hooks/useCart";
 import ProductService from "../../services/ProductService";
-import { API_URL } from "../../../lib/config";
+import { getAssetUrl } from "../../../lib/config";
 import {
   Product,
   ProductCollection,
@@ -36,15 +38,6 @@ const sorts: Array<{ label: string; order: ProductInquiry["order"]; direction: P
   { label: "Price: High to Low", order: "productPrice", direction: "desc" },
 ];
 
-const serverUrl = API_URL.replace(/\/api\/?$/, "");
-
-function getProductImage(product: Product): string | undefined {
-  const image = product.productImages?.[0];
-  if (!image) return undefined;
-  if (/^https?:\/\//.test(image)) return image;
-  return `${serverUrl}${image.startsWith("/") ? image : `/${image}`}`;
-}
-
 function formatPrice(price: number): string {
   return new Intl.NumberFormat("en-US", {
     style: "currency",
@@ -53,6 +46,7 @@ function formatPrice(price: number): string {
 }
 
 export default function ProductsPage() {
+  const { addItem } = useCart();
   const [products, setProducts] = useState<Product[]>([]);
   const [collection, setCollection] = useState<ProductCollection | "">("");
   const [size, setSize] = useState<ProductSize | "">("");
@@ -62,6 +56,7 @@ export default function ProductsPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
   const [requestKey, setRequestKey] = useState(0);
+  const [addedProductId, setAddedProductId] = useState("");
 
   useEffect(() => {
     let isCurrent = true;
@@ -109,6 +104,12 @@ export default function ProductsPage() {
     setSortIndex(0);
     setSearchInput("");
     setSearch("");
+  };
+
+  const handleAddToCart = (product: Product) => {
+    addItem(product);
+    setAddedProductId(product._id);
+    window.setTimeout(() => setAddedProductId(""), 1500);
   };
 
   return (
@@ -198,29 +199,38 @@ export default function ProductsPage() {
           {!isLoading && !error && products.length > 0 && (
             <div className="product-grid">
               {products.map((product) => {
-                const image = getProductImage(product);
+                const image = getAssetUrl(product.productImages?.[0]);
 
                 return (
                   <article className="product-card" key={product._id}>
-                    <div className="product-image-wrap">
+                    <Link className="product-image-wrap" to={`/shop/${product._id}`}>
                       {image ? (
                         <img src={image} alt={product.productName} />
                       ) : (
                         <div className="product-image-fallback">COLLESIUM</div>
                       )}
                       <span className="product-category">{product.productCollection}</span>
-                    </div>
+                    </Link>
                     <div className="product-info">
                       <div>
-                        <h2>{product.productName}</h2>
+                        <Link to={`/shop/${product._id}`}><h2>{product.productName}</h2></Link>
                         <p>{formatPrice(product.productPrice)}</p>
                       </div>
                       <div className="product-meta">
                         {product.productSize && <span>{product.productSize.replace("ONE_SIZE", "ONE SIZE")}</span>}
                         <span>{product.productLeftCount > 0 ? `${product.productLeftCount} IN STOCK` : "SOLD OUT"}</span>
                       </div>
-                      <button className="product-action" type="button" disabled>
-                        CART COMING NEXT
+                      <button
+                        className="product-action"
+                        type="button"
+                        disabled={product.productLeftCount < 1}
+                        onClick={() => handleAddToCart(product)}
+                      >
+                        {product.productLeftCount < 1
+                          ? "SOLD OUT"
+                          : addedProductId === product._id
+                            ? "ADDED TO CART"
+                            : "ADD TO CART"}
                       </button>
                     </div>
                   </article>

@@ -6,6 +6,11 @@ class ProductService {
     const { data } = await api.get<Product[]>("/products", { params: inquiry });
     return data;
   }
+
+  public async getProduct(productId: string): Promise<Product> {
+    const { data } = await api.get<Product>(`/products/${productId}`);
+    return data;
+  }
 }
 
 const productService = new ProductService();
