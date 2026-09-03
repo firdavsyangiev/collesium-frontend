@@ -1,5 +1,5 @@
 import { FormEvent, useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import useCart from "../../hooks/useCart";
 import ProductService from "../../services/ProductService";
 import { getAssetUrl } from "../../../lib/config";
@@ -46,9 +46,15 @@ function formatPrice(price: number): string {
 }
 
 export default function ProductsPage() {
+  const location = useLocation();
   const { addItem } = useCart();
   const [products, setProducts] = useState<Product[]>([]);
-  const [collection, setCollection] = useState<ProductCollection | "">("");
+  const [collection, setCollection] = useState<ProductCollection | "">(() => {
+    const requestedCollection = new URLSearchParams(location.search).get("collection");
+    return Object.values(ProductCollection).includes(requestedCollection as ProductCollection)
+      ? requestedCollection as ProductCollection
+      : "";
+  });
   const [size, setSize] = useState<ProductSize | "">("");
   const [sortIndex, setSortIndex] = useState(0);
   const [searchInput, setSearchInput] = useState("");
