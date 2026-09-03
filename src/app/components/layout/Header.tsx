@@ -1,5 +1,10 @@
+import { useState } from "react";
 import { NavLink } from "react-router-dom";
+import { getAssetUrl } from "../../../lib/config";
+import useAuth from "../../hooks/useAuth";
 import useCart from "../../hooks/useCart";
+import LoginModal from "../../screens/authPage/LoginModal";
+import SignupModal from "../../screens/authPage/SignupModal";
 
 const navigation = [
   { label: "Home", path: "/" },
@@ -11,6 +16,9 @@ const navigation = [
 
 export default function Header() {
   const { cartCount } = useCart();
+  const { member, isAuthLoading, logout } = useAuth();
+  const [authModal, setAuthModal] = useState<"login" | "signup" | null>(null);
+  const memberImage = getAssetUrl(member?.memberImage);
 
   return (
     <header className="site-header">
@@ -33,9 +41,41 @@ export default function Header() {
             Cart
             {cartCount > 0 && <span>{cartCount}</span>}
           </NavLink>
-          <NavLink to="/my-page" aria-label="My profile">Profile</NavLink>
+          {isAuthLoading ? (
+            <span className="auth-loading">ACCOUNT...</span>
+          ) : member ? (
+            <div className="member-actions">
+              <NavLink className="member-link" to="/my-page" aria-label="My profile">
+                {memberImage ? (
+                  <img src={memberImage} alt="" />
+                ) : (
+                  <span>{member.memberNick.charAt(0).toUpperCase()}</span>
+                )}
+                <b>{member.memberNick}</b>
+              </NavLink>
+              <button type="button" onClick={() => logout()}>LOGOUT</button>
+            </div>
+          ) : (
+            <div className="guest-actions">
+              <button type="button" onClick={() => setAuthModal("login")}>LOGIN</button>
+              <button className="signup-link" type="button" onClick={() => setAuthModal("signup")}>SIGN UP</button>
+            </div>
+          )}
         </div>
       </div>
+
+      {authModal === "login" && (
+        <LoginModal
+          onClose={() => setAuthModal(null)}
+          onSwitchToSignup={() => setAuthModal("signup")}
+        />
+      )}
+      {authModal === "signup" && (
+        <SignupModal
+          onClose={() => setAuthModal(null)}
+          onSwitchToLogin={() => setAuthModal("login")}
+        />
+      )}
     </header>
   );
 }

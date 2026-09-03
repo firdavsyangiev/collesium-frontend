@@ -1,0 +1,49 @@
+.profile-page { width: min(100% - 96px, var(--content-width)); margin: 0 auto; padding: 68px 0 120px; }
+.profile-heading { display: flex; justify-content: space-between; align-items: end; padding-bottom: 34px; border-bottom: 2px solid var(--black); }
+.profile-heading h1 { margin: 10px 0 0; font: 900 clamp(52px, 7vw, 84px)/.9 "Montserrat", sans-serif; letter-spacing: -.055em; }
+.profile-heading > button { padding: 11px 16px; border: 1px solid var(--border); color: #8f2923; background: var(--white); font-size: 10px; font-weight: 800; }
+.profile-layout { display: grid; grid-template-columns: 300px minmax(0, 1fr); gap: 45px; padding-top: 42px; align-items: start; }
+.profile-card { padding: 32px; color: var(--white); background: var(--black); text-align: center; }
+.profile-avatar { width: 140px; height: 140px; display: grid; place-items: center; margin: 0 auto 22px; overflow: hidden; border: 4px solid var(--accent); border-radius: 50%; color: var(--white); background: #282828; font: 900 54px "Montserrat", sans-serif; }
+.profile-avatar img { width: 100%; height: 100%; object-fit: cover; }
+.profile-card h2 { margin: 0 0 6px; font: 800 25px "Montserrat", sans-serif; text-transform: uppercase; }
+.profile-card > p { margin: 0; color: #989898; font-size: 9px; font-weight: 800; letter-spacing: .09em; }
+.profile-points { margin: 28px 0; padding: 23px 0; border-top: 1px solid #383838; border-bottom: 1px solid #383838; }
+.profile-points strong, .profile-points span { display: block; }
+.profile-points strong { color: var(--accent); font: 900 50px "Montserrat", sans-serif; }
+.profile-points span { color: #a3a3a3; font-size: 9px; font-weight: 800; letter-spacing: .08em; }
+.profile-card > a { font-size: 10px; font-weight: 800; letter-spacing: .06em; }
+.profile-form { padding: 32px; border: 1px solid var(--border); background: var(--white); }
+.profile-form-title { display: flex; justify-content: space-between; align-items: center; gap: 20px; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 1px solid var(--border); }
+.profile-form-title span { color: var(--accent); font-size: 9px; font-weight: 800; letter-spacing: .08em; }
+.profile-form-title h2 { margin: 7px 0 0; font: 800 23px "Montserrat", sans-serif; }
+.image-upload { padding: 11px 15px; border: 1px solid var(--black); font-size: 9px; font-weight: 800; cursor: pointer; }
+.image-upload input { display: none; }
+.profile-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
+.profile-fields label { display: grid; gap: 8px; font-size: 10px; font-weight: 800; letter-spacing: .06em; }
+.profile-fields label small { color: var(--muted); font-size: 8px; }
+.profile-fields input, .profile-fields textarea { width: 100%; padding: 13px; border: 1px solid var(--border); outline: 0; font: 400 14px "Inter", sans-serif; resize: vertical; }
+.profile-fields input { height: 48px; }
+.profile-fields input:focus, .profile-fields textarea:focus { border-color: var(--accent); }
+.wide-field { grid-column: 1 / -1; }
+.profile-error, .profile-success { margin: 20px 0 0; padding: 13px; font-size: 12px; }
+.profile-error { color: #972d26; background: #fce9e7; }
+.profile-success { color: #205f32; background: #e5f5e9; }
+.profile-save { margin-top: 24px; }
+.profile-state, .profile-auth-required { min-height: 68vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 50px 20px; text-align: center; }
+.profile-auth-required h1 { margin: 14px 0; font: 900 clamp(44px, 7vw, 76px)/.95 "Montserrat", sans-serif; }
+.profile-auth-required p { margin: 0 0 28px; color: var(--muted); }
+.profile-auth-required > div { display: flex; gap: 12px; }
+
+@media (max-width: 850px) {
+  .profile-page { width: calc(100% - 40px); }
+  .profile-layout { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 560px) {
+  .profile-heading { align-items: flex-start; flex-direction: column; gap: 25px; }
+  .profile-form, .profile-card { padding: 23px; }
+  .profile-form-title { align-items: flex-start; flex-direction: column; }
+  .profile-fields { grid-template-columns: 1fr; }
+  .wide-field { grid-column: auto; }
+}

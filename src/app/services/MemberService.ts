@@ -1,25 +1,38 @@
 import api from "./api";
-
-export interface SignupInput {
-  memberNick: string;
-  memberPhone: string;
-  memberPassword: string;
-}
-
-export interface AuthResponse {
-  accessToken: string;
-  member: {
-    _id: string;
-    memberNick: string;
-    memberPhone: string;
-  };
-}
+import {
+  AuthResponse,
+  LoginInput,
+  Member,
+  SignupInput,
+} from "../../lib/types/member";
 
 class MemberService {
   public async signup(input: SignupInput): Promise<AuthResponse> {
     const { data } = await api.post<AuthResponse>("/members/signup", input);
-    localStorage.setItem("accessToken", data.accessToken);
     return data;
+  }
+
+  public async login(input: LoginInput): Promise<AuthResponse> {
+    const { data } = await api.post<AuthResponse>("/members/login", input);
+    return data;
+  }
+
+  public async getMemberDetail(): Promise<Member> {
+    const { data } = await api.get<{ member: Member }>("/members/detail");
+    return data.member;
+  }
+
+  public async updateMember(input: FormData): Promise<Member> {
+    const { data } = await api.patch<{ member: Member }>(
+      "/members/update",
+      input,
+      { headers: { "Content-Type": "multipart/form-data" } },
+    );
+    return data.member;
+  }
+
+  public async logout(): Promise<void> {
+    await api.post("/members/logout");
   }
 }
 

@@ -2,17 +2,16 @@ import { FormEvent, useState } from "react";
 import useAuth from "../../hooks/useAuth";
 import { getApiErrorMessage } from "../../../lib/errors";
 
-interface SignupModalProps {
+interface LoginModalProps {
   onClose: () => void;
-  onSwitchToLogin?: () => void;
+  onSwitchToSignup?: () => void;
 }
 
-export default function SignupModal({
+export default function LoginModal({
   onClose,
-  onSwitchToLogin,
-}: SignupModalProps) {
-  const { signup } = useAuth();
-  const [memberNick, setMemberNick] = useState("");
+  onSwitchToSignup,
+}: LoginModalProps) {
+  const { login } = useAuth();
   const [memberPhone, setMemberPhone] = useState("");
   const [memberPassword, setMemberPassword] = useState("");
   const [error, setError] = useState("");
@@ -24,10 +23,10 @@ export default function SignupModal({
     setIsSubmitting(true);
 
     try {
-      await signup({ memberNick, memberPhone, memberPassword });
+      await login({ memberPhone, memberPassword });
       onClose();
     } catch (requestError: any) {
-      setError(getApiErrorMessage(requestError, "Sign up failed. Please try again."));
+      setError(getApiErrorMessage(requestError, "Login failed. Please try again."));
     } finally {
       setIsSubmitting(false);
     }
@@ -39,26 +38,15 @@ export default function SignupModal({
         className="signup-modal"
         role="dialog"
         aria-modal="true"
-        aria-labelledby="signup-title"
+        aria-labelledby="login-title"
         onMouseDown={(event) => event.stopPropagation()}
       >
-        <button className="modal-close" type="button" onClick={onClose} aria-label="Close">
-          ×
-        </button>
-        <span className="eyebrow">JOIN THE MOVEMENT</span>
-        <h2 id="signup-title">Create your account</h2>
-        <p>Track orders, connect with athletes and earn member points.</p>
+        <button className="modal-close" type="button" onClick={onClose} aria-label="Close">×</button>
+        <span className="eyebrow">WELCOME BACK</span>
+        <h2 id="login-title">Enter the arena</h2>
+        <p>Log in with the phone number used during registration.</p>
 
         <form onSubmit={handleSubmit}>
-          <label>
-            Nickname
-            <input
-              value={memberNick}
-              onChange={(event) => setMemberNick(event.target.value)}
-              minLength={2}
-              required
-            />
-          </label>
           <label>
             Phone number
             <input
@@ -66,6 +54,7 @@ export default function SignupModal({
               value={memberPhone}
               onChange={(event) => setMemberPhone(event.target.value)}
               required
+              autoFocus
             />
           </label>
           <label>
@@ -80,12 +69,12 @@ export default function SignupModal({
           </label>
           {error && <p className="form-error">{error}</p>}
           <button className="button button-accent button-full" disabled={isSubmitting} type="submit">
-            {isSubmitting ? "CREATING..." : "SIGN UP"}
+            {isSubmitting ? "LOGGING IN..." : "LOG IN"}
           </button>
         </form>
-        {onSwitchToLogin && (
-          <button className="auth-switch" type="button" onClick={onSwitchToLogin}>
-            Already a member? <strong>Log in</strong>
+        {onSwitchToSignup && (
+          <button className="auth-switch" type="button" onClick={onSwitchToSignup}>
+            New to Collesium? <strong>Sign up</strong>
           </button>
         )}
       </section>
