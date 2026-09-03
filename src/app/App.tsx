@@ -3,6 +3,7 @@ import Footer from "./components/layout/Footer";
 import Header from "./components/layout/Header";
 import HomePage from "./screens/homePage";
 import PlaceholderPage from "./screens/placeholderPage";
+import ProductsPage from "./screens/productsPage";
 
 export default function App() {
   return (
@@ -10,7 +11,7 @@ export default function App() {
       <Header />
       <Switch>
         <Route exact path="/" component={HomePage} />
-        <Route path="/shop" render={() => <PlaceholderPage title="Shop" />} />
+        <Route exact path="/shop" component={ProductsPage} />
         <Route path="/orders" render={() => <PlaceholderPage title="Orders" />} />
         <Route path="/my-page" render={() => <PlaceholderPage title="My Page" />} />
         <Route path="/community" render={() => <PlaceholderPage title="Community" />} />
