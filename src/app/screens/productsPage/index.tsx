@@ -29,6 +29,17 @@ const sizes = [
   { label: "XL", value: ProductSize.XL },
   { label: "XXL", value: ProductSize.XXL },
   { label: "One Size", value: ProductSize.ONE_SIZE },
+  { label: "EU 36", value: ProductSize.SHOE_36 },
+  { label: "EU 37", value: ProductSize.SHOE_37 },
+  { label: "EU 38", value: ProductSize.SHOE_38 },
+  { label: "EU 39", value: ProductSize.SHOE_39 },
+  { label: "EU 40", value: ProductSize.SHOE_40 },
+  { label: "EU 41", value: ProductSize.SHOE_41 },
+  { label: "EU 42", value: ProductSize.SHOE_42 },
+  { label: "EU 43", value: ProductSize.SHOE_43 },
+  { label: "EU 44", value: ProductSize.SHOE_44 },
+  { label: "EU 45", value: ProductSize.SHOE_45 },
+  { label: "EU 46", value: ProductSize.SHOE_46 },
 ];
 
 const sorts: Array<{ label: string; order: ProductInquiry["order"]; direction: ProductInquiry["direction"] }> = [

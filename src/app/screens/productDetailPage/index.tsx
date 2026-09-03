@@ -3,7 +3,7 @@ import { Link, useParams } from "react-router-dom";
 import useCart from "../../hooks/useCart";
 import ProductService from "../../services/ProductService";
 import { getAssetUrl } from "../../../lib/config";
-import { Product } from "../../../lib/types/product";
+import { Product, ProductCollection } from "../../../lib/types/product";
 import "../../../css/product-detail.css";
 
 function formatPrice(price: number): string {
@@ -110,7 +110,7 @@ export default function ProductDetailPage() {
             {product.productSize && (
               <div><span>SIZE</span><strong>{product.productSize.replace("ONE_SIZE", "ONE SIZE")}</strong></div>
             )}
-            {product.productVolume && (
+            {product.productCollection === ProductCollection.NUTRITION && product.productVolume && (
               <div><span>VOLUME</span><strong>{product.productVolume} KG</strong></div>
             )}
             <div><span>AVAILABILITY</span><strong>{inStock ? `${product.productLeftCount} IN STOCK` : "SOLD OUT"}</strong></div>
