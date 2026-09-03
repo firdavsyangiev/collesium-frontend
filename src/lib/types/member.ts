@@ -38,3 +38,11 @@ export interface AuthResponse {
   accessToken: string;
   member: Member;
 }
+
+export interface TopBuyer {
+  _id: string;
+  memberNick: string;
+  memberImage?: string;
+  orderCount: number;
+  totalSpent: number;
+}

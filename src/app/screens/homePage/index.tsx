@@ -2,11 +2,13 @@ import { useEffect, useState } from "react";
 import { Link, useHistory } from "react-router-dom";
 import { getAssetUrl } from "../../../lib/config";
 import { Product, ProductCollection } from "../../../lib/types/product";
+import { TopBuyer } from "../../../lib/types/member";
 import { deduplicateProductVariants, requiresProductSize } from "../../../lib/product-utils";
 import "../../../css/home.css";
 import useCart from "../../hooks/useCart";
 import useAuth from "../../hooks/useAuth";
 import ProductService from "../../services/ProductService";
+import MemberService from "../../services/MemberService";
 import SignupModal from "../authPage/SignupModal";
 
 const stats = [
@@ -40,24 +42,6 @@ const categories = [
   },
 ];
 
-const athletes = [
-  {
-    name: "Marcus Vance",
-    discipline: "Powerlifting",
-    image: "https://lh3.googleusercontent.com/aida-public/AB6AXuCAbmqHGdsPcgErMkJoRnHQEmrGkFIzla1VPdz27gyl5lDCHmBO5k5CpW0fN8NwzHNHzc_qm5h11wT6D7SpgCEWyeDBv6ya9-0BfAslkmW3IHnIHxpMMyP7rsvxA8jkM4_WDLqiFwqDEz2pkoM4EOatSAu_HHkrIWlgk65J0c4yolrFli5NGyL-oBqJDGIBpwxPwpGUogc1GZKSO70-ENB3Hd6v9cCc5WQzfG1zDjgAUrjfRlBq050",
-  },
-  {
-    name: "Sarah Jenkins",
-    discipline: "CrossFit",
-    image: "https://lh3.googleusercontent.com/aida-public/AB6AXuBE6FWkW1H3I8t9cI3D_eoVqbuj-0xnceKQOHt2hxU7Db0noyy6P1qeFORNnGj-T1kuh2wZdnGUyCb9M0StZIC5objK5WtAenLU4iLK3OTG2xegiPByomz86432quRw1DMnTNek3XLyiG-m6sqIwcVUov0UsiX0r0Xid9IjvMkLF0udGR5kVI6KQI-cKDY25jZusKr7mXq_N4InA4i88R93qaAbFIi96xWRlokHe6BcvdVmhxlPNB8",
-  },
-  {
-    name: "David Chen",
-    discipline: "Endurance Running",
-    image: "https://lh3.googleusercontent.com/aida-public/AB6AXuC8kDc1jYXf1PB8F4FyKipOIx4sXI8UdIXxOgs-NQMZAslR4HXly3uGmyL9i4ZLKfJxRm99YNx2n2y8yJo7I2iM_AvkBegkPlU_TjSSE2Pp7iKEoPoKxv-TzT5CMwJ9NBavjYzqpa-aCeALEa63jlmusOQ287BcGA96i1fYBMFJjcex9J8-6sReHnZ7hL8Agac6D2SpBHOzY1gCiO8TMTqk6ImGRRleg4scmnVIytilBwXNgawjG04",
-  },
-];
-
 const enduranceImage = "https://lh3.googleusercontent.com/aida-public/AB6AXuDGFbyBHrJNOc2osnkenjjarrMg2Edolbo_0PeQeKiwBclFVI4WR-8u9Do7ezLxZByski-Bjf_0T7U6rNAcClmVLR-pqL3hFN-Ht-Kpbhaa8U3Jo_xVh-xHIILSlyvZscMLgys5oJaLGZRJ4kYeAJlqr7_sUUJl_OyCZvMaDb8EIsdCKvc9wXmuHTVcQnX5fpUwPv_2in1cnO3dqjZQY2zO6SEADdeIwkat4qJAWKa-XGvwyl3z-CU";
 
 function formatPrice(price: number): string {
@@ -73,6 +57,8 @@ export default function HomePage() {
   const [isLoading, setIsLoading] = useState(true);
   const [productsError, setProductsError] = useState("");
   const [addedProductId, setAddedProductId] = useState("");
+  const [topBuyers, setTopBuyers] = useState<TopBuyer[]>([]);
+  const [areBuyersLoading, setAreBuyersLoading] = useState(true);
 
   useEffect(() => {
     let isCurrent = true;
@@ -88,6 +74,17 @@ export default function HomePage() {
       })
       .finally(() => {
         if (isCurrent) setIsLoading(false);
+      });
+
+    MemberService.getTopBuyers()
+      .then((result) => {
+        if (isCurrent) setTopBuyers(result);
+      })
+      .catch(() => {
+        if (isCurrent) setTopBuyers([]);
+      })
+      .finally(() => {
+        if (isCurrent) setAreBuyersLoading(false);
       });
 
     return () => {
@@ -221,16 +218,35 @@ export default function HomePage() {
 
       <section className="athletes-section">
         <div className="home-section">
-          <div className="home-section-heading"><h2>ELITE ATHLETES</h2></div>
-          <div className="athlete-grid">
-            {athletes.map((athlete) => (
-              <article className="athlete-card" key={athlete.name}>
-                <div><img src={athlete.image} alt={athlete.name} /></div>
-                <h3>{athlete.name}</h3>
-                <p>{athlete.discipline}</p>
-              </article>
-            ))}
-          </div>
+          <div className="home-section-heading"><h2>TOP BUYERS</h2></div>
+          {areBuyersLoading ? (
+            <div className="athlete-grid">
+              {[0, 1, 2].map((item) => <div className="buyer-skeleton" key={item} />)}
+            </div>
+          ) : topBuyers.length > 0 ? (
+            <div className="athlete-grid">
+              {topBuyers.map((buyer, index) => {
+                const buyerImage = getAssetUrl(buyer.memberImage);
+                return (
+                  <article className="athlete-card" key={buyer._id}>
+                    <div>
+                      {buyerImage
+                        ? <img src={buyerImage} alt={buyer.memberNick} />
+                        : <span className="buyer-image-fallback">{buyer.memberNick.charAt(0).toUpperCase()}</span>}
+                      <b className="buyer-rank">#{index + 1}</b>
+                    </div>
+                    <h3>{buyer.memberNick}</h3>
+                    <p>{formatPrice(buyer.totalSpent)} PURCHASED · {buyer.orderCount} {buyer.orderCount === 1 ? "ORDER" : "ORDERS"}</p>
+                  </article>
+                );
+              })}
+            </div>
+          ) : (
+            <div className="buyers-empty">
+              <strong>THE LEADERBOARD IS WAITING</strong>
+              <p>Top buyers will appear after their orders are completed.</p>
+            </div>
+          )}
         </div>
       </section>
 

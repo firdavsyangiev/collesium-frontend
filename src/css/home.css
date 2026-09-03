@@ -122,11 +122,17 @@
 
 .athletes-section { background: var(--white); }
 .athlete-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
-.athlete-card > div { aspect-ratio: 1; overflow: hidden; background: #e5e7e9; }
+.athlete-card > div { position: relative; aspect-ratio: 1; display: grid; place-items: center; overflow: hidden; background: #e5e7e9; }
 .athlete-card img { width: 100%; height: 100%; object-fit: cover; filter: saturate(.75); transition: transform .6s ease; }
 .athlete-card:hover img { transform: scale(1.04); }
 .athlete-card h3 { margin: 17px 0 5px; font: 800 23px "Montserrat", sans-serif; text-transform: uppercase; }
 .athlete-card p { margin: 0; color: var(--accent); font-size: 11px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
+.buyer-image-fallback { color: #99a0a5; font: 900 82px "Montserrat", sans-serif; }
+.buyer-rank { position: absolute; top: 16px; left: 16px; padding: 9px 11px; color: var(--white); background: var(--black); font: 800 12px "Montserrat", sans-serif; }
+.buyer-skeleton { aspect-ratio: 1 / 1.17; background: linear-gradient(90deg, #e8eaec 25%, #f6f7f8 50%, #e8eaec 75%); background-size: 200% 100%; animation: home-loading 1.3s infinite; }
+.buyers-empty { min-height: 260px; display: flex; flex-direction: column; align-items: center; justify-content: center; border: 1px solid var(--border); text-align: center; }
+.buyers-empty strong { font: 800 23px "Montserrat", sans-serif; }
+.buyers-empty p { margin: 10px 0 0; color: var(--muted); }
 
 @keyframes home-loading { to { background-position-x: -200%; } }
 

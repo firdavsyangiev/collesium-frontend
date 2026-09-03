@@ -4,6 +4,7 @@ import {
   LoginInput,
   Member,
   SignupInput,
+  TopBuyer,
 } from "../../lib/types/member";
 
 class MemberService {
@@ -33,6 +34,11 @@ class MemberService {
 
   public async logout(): Promise<void> {
     await api.post("/members/logout");
+  }
+
+  public async getTopBuyers(): Promise<TopBuyer[]> {
+    const { data } = await api.get<TopBuyer[]>("/members/top-buyers");
+    return data;
   }
 }
 
