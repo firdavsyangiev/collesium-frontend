@@ -10,12 +10,24 @@ export interface OrderItemRequest {
   itemQuantity: number;
 }
 
+export interface OrderItem {
+  _id: string;
+  itemQuantity: number;
+  itemPrice: number;
+  orderId: string;
+  productId: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export interface Order {
   _id: string;
   orderTotal: number;
   orderDelivery: number;
   orderStatus: OrderStatus;
   memberId: string;
+  orderItems?: OrderItem[];
+  productData?: import("./product").Product[];
   createdAt: string;
   updatedAt: string;
 }

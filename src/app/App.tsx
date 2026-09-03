@@ -7,6 +7,7 @@ import ProductsPage from "./screens/productsPage";
 import ProductDetailPage from "./screens/productDetailPage";
 import CartPage from "./screens/cartPage";
 import CheckoutPage from "./screens/checkoutPage";
+import OrdersPage from "./screens/ordersPage";
 
 export default function App() {
   return (
@@ -16,7 +17,7 @@ export default function App() {
         <Route exact path="/" component={HomePage} />
         <Route exact path="/shop" component={ProductsPage} />
         <Route exact path="/shop/:productId" component={ProductDetailPage} />
-        <Route path="/orders" render={() => <PlaceholderPage title="Orders" />} />
+        <Route path="/orders" component={OrdersPage} />
         <Route path="/my-page" render={() => <PlaceholderPage title="My Page" />} />
         <Route path="/community" render={() => <PlaceholderPage title="Community" />} />
         <Route path="/cart" component={CartPage} />
