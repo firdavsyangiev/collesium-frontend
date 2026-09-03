@@ -1,6 +1,7 @@
 import { FormEvent, useState } from "react";
 import { Link } from "react-router-dom";
 import useCart from "../../hooks/useCart";
+import useAuth from "../../hooks/useAuth";
 import OrderService from "../../services/OrderService";
 import "../../../css/checkout.css";
 
@@ -13,6 +14,7 @@ function formatPrice(price: number): string {
 
 export default function CheckoutPage() {
   const { items, subtotal, clearCart } = useCart();
+  const { member } = useAuth();
   const [paymentConfirmed, setPaymentConfirmed] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState("");
@@ -64,6 +66,7 @@ export default function CheckoutPage() {
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setError("");
+    const form = new FormData(event.currentTarget);
 
     if (!paymentConfirmed) {
       setError("Please confirm the manual payment verification terms.");
@@ -74,10 +77,15 @@ export default function CheckoutPage() {
 
     try {
       const order = await OrderService.createOrder(
-        items.map(({ product, quantity }) => ({
-          productId: product._id,
-          itemQuantity: quantity,
-        })),
+        {
+          items: items.map(({ product, quantity }) => ({
+            productId: product._id,
+            itemQuantity: quantity,
+          })),
+          recipientName: String(form.get("recipientName") ?? "").trim(),
+          recipientPhone: String(form.get("recipientPhone") ?? "").trim(),
+          deliveryAddress: String(form.get("deliveryAddress") ?? "").trim(),
+        },
       );
 
       setCreatedOrder({ id: order._id, total: order.orderTotal });
@@ -110,6 +118,52 @@ export default function CheckoutPage() {
           <section className="checkout-panel">
             <span className="checkout-step">01</span>
             <div>
+              <h2>DELIVERY DETAILS</h2>
+              <p>Enter the details of the person who will receive this order.</p>
+              <div className="delivery-fields">
+                <label>
+                  RECIPIENT NAME
+                  <input
+                    defaultValue={member?.memberNick ?? ""}
+                    maxLength={80}
+                    minLength={2}
+                    name="recipientName"
+                    placeholder="Full name"
+                    required
+                  />
+                </label>
+                <label>
+                  PHONE NUMBER
+                  <input
+                    defaultValue={member?.memberPhone ?? ""}
+                    maxLength={24}
+                    minLength={7}
+                    name="recipientPhone"
+                    pattern="[+0-9()\\s-]{7,24}"
+                    placeholder="+82 10 1234 5678"
+                    required
+                    type="tel"
+                  />
+                </label>
+                <label className="delivery-address-field">
+                  DELIVERY ADDRESS
+                  <textarea
+                    defaultValue={member?.memberAddress ?? ""}
+                    maxLength={300}
+                    minLength={10}
+                    name="deliveryAddress"
+                    placeholder="Street, building, apartment, city and postal code"
+                    required
+                    rows={4}
+                  />
+                </label>
+              </div>
+            </div>
+          </section>
+
+          <section className="checkout-panel">
+            <span className="checkout-step">02</span>
+            <div>
               <h2>REVIEW YOUR ORDER</h2>
               <p>
                 Product prices and stock are checked again securely by the
@@ -119,7 +173,7 @@ export default function CheckoutPage() {
           </section>
 
           <section className="checkout-panel">
-            <span className="checkout-step">02</span>
+            <span className="checkout-step">03</span>
             <div className="payment-copy">
               <h2>MANUAL PAYMENT VERIFICATION</h2>
               <p>

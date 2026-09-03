@@ -1,13 +1,13 @@
 import api from "./api";
 import {
   Order,
-  OrderItemRequest,
+  OrderCreateInput,
   OrderStatus,
 } from "../../lib/types/order";
 
 class OrderService {
-  public async createOrder(items: OrderItemRequest[]): Promise<Order> {
-    const { data } = await api.post<{ order: Order }>("/orders", items);
+  public async createOrder(input: OrderCreateInput): Promise<Order> {
+    const { data } = await api.post<{ order: Order }>("/orders", input);
     return data.order;
   }
 

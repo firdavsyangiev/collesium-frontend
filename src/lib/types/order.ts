@@ -10,6 +10,13 @@ export interface OrderItemRequest {
   itemQuantity: number;
 }
 
+export interface OrderCreateInput {
+  items: OrderItemRequest[];
+  recipientName: string;
+  recipientPhone: string;
+  deliveryAddress: string;
+}
+
 export interface OrderItem {
   _id: string;
   itemQuantity: number;
@@ -26,6 +33,9 @@ export interface Order {
   orderDelivery: number;
   orderStatus: OrderStatus;
   memberId: string;
+  recipientName: string;
+  recipientPhone: string;
+  deliveryAddress: string;
   orderItems?: OrderItem[];
   productData?: import("./product").Product[];
   createdAt: string;
