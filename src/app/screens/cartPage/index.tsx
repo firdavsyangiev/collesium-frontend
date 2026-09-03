@@ -89,7 +89,7 @@ export default function CartPage() {
             <p>Add {formatPrice(100 - subtotal)} more for free delivery.</p>
           )}
           <div className="summary-total"><span>Total</span><strong>{formatPrice(total)}</strong></div>
-          <button className="checkout-next" type="button" disabled>CHECKOUT COMING NEXT</button>
+          <Link className="checkout-next" to="/checkout">CHECKOUT</Link>
           <small>Taxes are calculated during checkout.</small>
         </aside>
       </div>

@@ -6,6 +6,7 @@ import PlaceholderPage from "./screens/placeholderPage";
 import ProductsPage from "./screens/productsPage";
 import ProductDetailPage from "./screens/productDetailPage";
 import CartPage from "./screens/cartPage";
+import CheckoutPage from "./screens/checkoutPage";
 
 export default function App() {
   return (
@@ -19,6 +20,7 @@ export default function App() {
         <Route path="/my-page" render={() => <PlaceholderPage title="My Page" />} />
         <Route path="/community" render={() => <PlaceholderPage title="Community" />} />
         <Route path="/cart" component={CartPage} />
+        <Route path="/checkout" component={CheckoutPage} />
         <Route render={() => <PlaceholderPage title="Page not found" />} />
       </Switch>
       <Footer />
