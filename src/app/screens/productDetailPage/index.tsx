@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import useCart from "../../hooks/useCart";
-import ProductService from "../../services/ProductService";
 import { getAssetUrl } from "../../../lib/config";
 import { Product, ProductCollection } from "../../../lib/types/product";
+import { formatProductSize, requiresProductSize } from "../../../lib/product-utils";
 import "../../../css/product-detail.css";
+import useCart from "../../hooks/useCart";
+import ProductService from "../../services/ProductService";
 
 function formatPrice(price: number): string {
   return new Intl.NumberFormat("en-US", {
@@ -17,6 +18,8 @@ export default function ProductDetailPage() {
   const { productId } = useParams<{ productId: string }>();
   const { addItem } = useCart();
   const [product, setProduct] = useState<Product | null>(null);
+  const [variants, setVariants] = useState<Product[]>([]);
+  const [selectedVariant, setSelectedVariant] = useState<Product | null>(null);
   const [selectedImage, setSelectedImage] = useState(0);
   const [quantity, setQuantity] = useState(1);
   const [isLoading, setIsLoading] = useState(true);
@@ -29,10 +32,31 @@ export default function ProductDetailPage() {
     const loadProduct = async () => {
       setIsLoading(true);
       setError("");
+      setSelectedVariant(null);
+      setVariants([]);
 
       try {
         const result = await ProductService.getProduct(productId);
-        if (isCurrent) setProduct(result);
+        let productVariants: Product[] = [];
+
+        if (requiresProductSize(result)) {
+          const candidates = await ProductService.getProducts({
+            limit: 100,
+            productCollection: result.productCollection,
+            search: result.productName,
+          });
+          productVariants = candidates
+            .filter((candidate) => candidate.productName.toLowerCase() === result.productName.toLowerCase())
+            .sort((first, second) =>
+              formatProductSize(first).localeCompare(formatProductSize(second), undefined, { numeric: true }),
+            );
+        }
+
+        if (isCurrent) {
+          setProduct(result);
+          setVariants(productVariants);
+          setSelectedVariant(requiresProductSize(result) ? null : result);
+        }
       } catch (requestError: any) {
         if (isCurrent) {
           setError(requestError.response?.data?.message || "Product could not be loaded.");
@@ -48,9 +72,7 @@ export default function ProductDetailPage() {
     };
   }, [productId]);
 
-  if (isLoading) {
-    return <main className="detail-state">LOADING PRODUCT...</main>;
-  }
+  if (isLoading) return <main className="detail-state">LOADING PRODUCT...</main>;
 
   if (error || !product) {
     return (
@@ -62,11 +84,22 @@ export default function ProductDetailPage() {
     );
   }
 
-  const images = product.productImages.map(getAssetUrl).filter(Boolean) as string[];
-  const inStock = product.productLeftCount > 0;
+  const needsSize = requiresProductSize(product);
+  const activeProduct = selectedVariant || product;
+  const hasSelectedSize = !needsSize || Boolean(selectedVariant);
+  const images = activeProduct.productImages.map(getAssetUrl).filter(Boolean) as string[];
+  const inStock = hasSelectedSize && activeProduct.productLeftCount > 0;
+
+  const selectVariant = (variant: Product) => {
+    setSelectedVariant(variant);
+    setSelectedImage(0);
+    setQuantity(1);
+    setAddedMessage("");
+  };
 
   const addToCart = () => {
-    addItem(product, quantity);
+    if (!hasSelectedSize || !inStock) return;
+    addItem(activeProduct, quantity);
     setAddedMessage(`${quantity} item${quantity > 1 ? "s" : ""} added to your cart.`);
     window.setTimeout(() => setAddedMessage(""), 2200);
   };
@@ -79,7 +112,7 @@ export default function ProductDetailPage() {
         <div className="product-gallery">
           <div className="detail-main-image">
             {images.length > 0 ? (
-              <img src={images[selectedImage]} alt={product.productName} />
+              <img src={images[Math.min(selectedImage, images.length - 1)]} alt={activeProduct.productName} />
             ) : (
               <div>COLLESIUM</div>
             )}
@@ -93,7 +126,7 @@ export default function ProductDetailPage() {
                   type="button"
                   onClick={() => setSelectedImage(index)}
                 >
-                  <img src={image} alt={`${product.productName} view ${index + 1}`} />
+                  <img src={image} alt={`${activeProduct.productName} view ${index + 1}`} />
                 </button>
               ))}
             </div>
@@ -101,33 +134,59 @@ export default function ProductDetailPage() {
         </div>
 
         <div className="product-detail-info">
-          <span className="eyebrow">{product.productCollection}</span>
-          <h1>{product.productName}</h1>
-          <strong className="detail-price">{formatPrice(product.productPrice)}</strong>
-          <p className="detail-description">{product.productDesc}</p>
+          <span className="eyebrow">{activeProduct.productCollection}</span>
+          <h1>{activeProduct.productName}</h1>
+          <strong className="detail-price">{formatPrice(activeProduct.productPrice)}</strong>
+          <p className="detail-description">{activeProduct.productDesc}</p>
+
+          {needsSize && (
+            <div className="size-selector">
+              <div><strong>SELECT SIZE</strong><span>{selectedVariant ? formatProductSize(selectedVariant) : "Required"}</span></div>
+              <div className="size-options">
+                {variants.map((variant) => (
+                  <button
+                    className={selectedVariant?._id === variant._id ? "active" : ""}
+                    disabled={variant.productLeftCount < 1}
+                    key={variant._id}
+                    type="button"
+                    onClick={() => selectVariant(variant)}
+                  >
+                    {formatProductSize(variant)}
+                  </button>
+                ))}
+              </div>
+              {variants.length === 0 && <p>No available sizes were found for this product.</p>}
+            </div>
+          )}
 
           <div className="detail-specs">
-            {product.productSize && (
-              <div><span>SIZE</span><strong>{product.productSize.replace("ONE_SIZE", "ONE SIZE")}</strong></div>
+            {needsSize && (
+              <div><span>SIZE</span><strong>{selectedVariant ? formatProductSize(selectedVariant) : "SELECT A SIZE"}</strong></div>
             )}
-            {product.productCollection === ProductCollection.NUTRITION && product.productVolume && (
-              <div><span>VOLUME</span><strong>{product.productVolume} KG</strong></div>
+            {!needsSize && activeProduct.productSize && (
+              <div><span>SIZE</span><strong>{formatProductSize(activeProduct)}</strong></div>
             )}
-            <div><span>AVAILABILITY</span><strong>{inStock ? `${product.productLeftCount} IN STOCK` : "SOLD OUT"}</strong></div>
+            {activeProduct.productCollection === ProductCollection.NUTRITION && activeProduct.productVolume && (
+              <div><span>VOLUME</span><strong>{activeProduct.productVolume} KG</strong></div>
+            )}
+            <div>
+              <span>AVAILABILITY</span>
+              <strong>{!hasSelectedSize ? "SELECT SIZE" : activeProduct.productLeftCount > 0 ? `${activeProduct.productLeftCount} IN STOCK` : "SOLD OUT"}</strong>
+            </div>
           </div>
 
           <div className="detail-purchase">
             <div className="quantity-picker" aria-label="Product quantity">
-              <button type="button" onClick={() => setQuantity((value) => Math.max(1, value - 1))}>−</button>
+              <button type="button" disabled={!hasSelectedSize} onClick={() => setQuantity((value) => Math.max(1, value - 1))}>−</button>
               <span>{quantity}</span>
               <button
                 type="button"
-                onClick={() => setQuantity((value) => Math.min(product.productLeftCount, value + 1))}
-                disabled={!inStock || quantity >= product.productLeftCount}
+                onClick={() => setQuantity((value) => Math.min(activeProduct.productLeftCount, value + 1))}
+                disabled={!inStock || quantity >= activeProduct.productLeftCount}
               >+</button>
             </div>
             <button className="button button-accent detail-add" type="button" onClick={addToCart} disabled={!inStock}>
-              {inStock ? "ADD TO CART" : "SOLD OUT"}
+              {!hasSelectedSize ? "SELECT SIZE" : inStock ? "ADD TO CART" : "SOLD OUT"}
             </button>
           </div>
 

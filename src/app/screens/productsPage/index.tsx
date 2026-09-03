@@ -1,8 +1,9 @@
 import { FormEvent, useEffect, useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useHistory, useLocation } from "react-router-dom";
 import useCart from "../../hooks/useCart";
 import ProductService from "../../services/ProductService";
 import { getAssetUrl } from "../../../lib/config";
+import { deduplicateProductVariants, requiresProductSize } from "../../../lib/product-utils";
 import {
   Product,
   ProductCollection,
@@ -57,6 +58,7 @@ function formatPrice(price: number): string {
 }
 
 export default function ProductsPage() {
+  const history = useHistory();
   const location = useLocation();
   const { addItem } = useCart();
   const [products, setProducts] = useState<Product[]>([]);
@@ -93,7 +95,7 @@ export default function ProductsPage() {
           ...(search && { search }),
         });
 
-        if (isCurrent) setProducts(result);
+        if (isCurrent) setProducts(deduplicateProductVariants(result));
       } catch (requestError: any) {
         if (isCurrent) {
           setProducts([]);
@@ -124,6 +126,11 @@ export default function ProductsPage() {
   };
 
   const handleAddToCart = (product: Product) => {
+    if (requiresProductSize(product)) {
+      history.push(`/shop/${product._id}`);
+      return;
+    }
+
     addItem(product);
     setAddedProductId(product._id);
     window.setTimeout(() => setAddedProductId(""), 1500);
@@ -247,6 +254,8 @@ export default function ProductsPage() {
                           ? "SOLD OUT"
                           : addedProductId === product._id
                             ? "ADDED TO CART"
+                            : requiresProductSize(product)
+                              ? "SELECT SIZE"
                             : "ADD TO CART"}
                       </button>
                     </div>

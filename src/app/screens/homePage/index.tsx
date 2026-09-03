@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { getAssetUrl } from "../../../lib/config";
 import { Product, ProductCollection } from "../../../lib/types/product";
+import { deduplicateProductVariants, requiresProductSize } from "../../../lib/product-utils";
 import "../../../css/home.css";
 import useCart from "../../hooks/useCart";
+import useAuth from "../../hooks/useAuth";
 import ProductService from "../../services/ProductService";
 import SignupModal from "../authPage/SignupModal";
 
@@ -63,6 +65,8 @@ function formatPrice(price: number): string {
 }
 
 export default function HomePage() {
+  const history = useHistory();
+  const { member, isAuthLoading } = useAuth();
   const { addItem } = useCart();
   const [isSignupOpen, setIsSignupOpen] = useState(false);
   const [products, setProducts] = useState<Product[]>([]);
@@ -73,9 +77,9 @@ export default function HomePage() {
   useEffect(() => {
     let isCurrent = true;
 
-    ProductService.getProducts({ limit: 4, order: "productView", direction: "desc" })
+    ProductService.getProducts({ limit: 100, order: "productView", direction: "desc" })
       .then((result) => {
-        if (isCurrent) setProducts(result);
+        if (isCurrent) setProducts(deduplicateProductVariants(result).slice(0, 4));
       })
       .catch((error: any) => {
         if (isCurrent) {
@@ -92,6 +96,11 @@ export default function HomePage() {
   }, []);
 
   const handleAddToCart = (product: Product) => {
+    if (requiresProductSize(product)) {
+      history.push(`/shop/${product._id}`);
+      return;
+    }
+
     addItem(product);
     setAddedProductId(product._id);
     window.setTimeout(() => setAddedProductId(""), 1500);
@@ -105,9 +114,11 @@ export default function HomePage() {
           <span className="eyebrow">THE COLLESIUM STANDARD</span>
           <h1>UNLEASH YOUR INNER TITAN</h1>
           <p>Premium Gym Apparel &amp; Elite Nutrition</p>
-          <button className="button button-accent" type="button" onClick={() => setIsSignupOpen(true)}>
-            SIGN UP
-          </button>
+          {!isAuthLoading && !member && (
+            <button className="button button-accent" type="button" onClick={() => setIsSignupOpen(true)}>
+              SIGN UP
+            </button>
+          )}
         </div>
       </section>
 
@@ -167,6 +178,8 @@ export default function HomePage() {
                     >
                       {product.productLeftCount < 1
                         ? "SOLD OUT"
+                        : requiresProductSize(product)
+                          ? "SELECT SIZE"
                         : addedProductId === product._id
                           ? "ADDED TO CART"
                           : "ADD TO CART"}
@@ -221,7 +234,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {isSignupOpen && <SignupModal onClose={() => setIsSignupOpen(false)} />}
+      {!member && isSignupOpen && <SignupModal onClose={() => setIsSignupOpen(false)} />}
     </main>
   );
 }

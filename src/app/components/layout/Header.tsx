@@ -20,6 +20,11 @@ export default function Header() {
   const [authModal, setAuthModal] = useState<"login" | "signup" | null>(null);
   const memberImage = getAssetUrl(member?.memberImage);
 
+  const handleLogout = async () => {
+    if (!window.confirm("Are you sure you want to log out?")) return;
+    await logout();
+  };
+
   return (
     <header className="site-header">
       <div className="header-inner">
@@ -53,7 +58,7 @@ export default function Header() {
                 )}
                 <b>{member.memberNick}</b>
               </NavLink>
-              <button type="button" onClick={() => logout()}>LOGOUT</button>
+              <button type="button" onClick={handleLogout}>LOGOUT</button>
             </div>
           ) : (
             <div className="guest-actions">

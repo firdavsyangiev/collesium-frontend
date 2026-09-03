@@ -12,6 +12,15 @@
 .product-detail-info h1 { margin: 13px 0 20px; font: 900 clamp(42px, 5vw, 66px)/.98 "Montserrat", sans-serif; letter-spacing: -.045em; text-transform: uppercase; }
 .detail-price { display: block; color: var(--accent); font-size: 30px; }
 .detail-description { margin: 28px 0; color: var(--muted); font-size: 16px; line-height: 1.75; }
+.size-selector { margin: 28px 0; }
+.size-selector > div:first-child { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+.size-selector > div:first-child strong { font-size: 11px; letter-spacing: .08em; }
+.size-selector > div:first-child span { color: var(--muted); font-size: 11px; font-weight: 700; text-transform: uppercase; }
+.size-options { display: flex; flex-wrap: wrap; gap: 9px; }
+.size-options button { min-width: 52px; height: 43px; padding: 0 12px; border: 1px solid #aeb2b5; color: var(--black); background: var(--white); font-size: 11px; font-weight: 800; }
+.size-options button:hover:not(:disabled), .size-options button.active { border-color: var(--black); color: var(--white); background: var(--black); }
+.size-options button:disabled { color: #a8aaac; background: #eceeef; text-decoration: line-through; cursor: default; }
+.size-selector > p { margin: 10px 0 0; color: #9b3028; font-size: 12px; }
 .detail-specs { display: grid; grid-template-columns: repeat(3, 1fr); margin: 28px 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
 .detail-specs div { min-width: 0; padding: 18px 12px; border-right: 1px solid var(--border); }
 .detail-specs div:first-child { padding-left: 0; }
