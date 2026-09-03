@@ -1,6 +1,7 @@
 import { FormEvent, useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import "../../../css/community.css";
+import CommunityService from "../../services/CommunityService";
 
 type CommunityTab = "terms" | "faq" | "contact";
 
@@ -42,20 +43,37 @@ export default function CommunityPage() {
   const location = useLocation();
   const [activeTab, setActiveTab] = useState<CommunityTab>(() => getCommunityTab(location.search));
   const [openQuestion, setOpenQuestion] = useState<number | null>(0);
+  const [isSending, setIsSending] = useState(false);
+  const [contactError, setContactError] = useState("");
+  const [contactSuccess, setContactSuccess] = useState(false);
 
   useEffect(() => {
     setActiveTab(getCommunityTab(location.search));
   }, [location.search]);
 
-  const handleContact = (event: FormEvent<HTMLFormElement>) => {
+  const handleContact = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const form = new FormData(event.currentTarget);
+    const contactForm = event.currentTarget;
+    setContactError("");
+    setContactSuccess(false);
+    const form = new FormData(contactForm);
     const name = String(form.get("name") || "").trim();
     const email = String(form.get("email") || "").trim();
     const message = String(form.get("message") || "").trim();
-    const subject = encodeURIComponent(`Collesium support request from ${name}`);
-    const body = encodeURIComponent(`Name: ${name}\nEmail: ${email}\n\n${message}`);
-    window.location.href = `mailto:support@collesium.com?subject=${subject}&body=${body}`;
+    setIsSending(true);
+
+    try {
+      await CommunityService.sendContactMessage({ name, email, message });
+      contactForm.reset();
+      setContactSuccess(true);
+    } catch (requestError: any) {
+      setContactError(
+        requestError.response?.data?.error?.message ||
+          "Your message could not be sent. Please try again.",
+      );
+    } finally {
+      setIsSending(false);
+    }
   };
 
   return (
@@ -131,9 +149,11 @@ export default function CommunityPage() {
               </label>
               <label>
                 MESSAGE
-                <textarea name="message" rows={6} placeholder="Your message" required />
+                <textarea maxLength={2000} minLength={10} name="message" rows={6} placeholder="Your message" required />
               </label>
-              <button className="button button-dark" type="submit">SEND MESSAGE</button>
+              {contactError && <p className="contact-message error" role="alert">{contactError}</p>}
+              {contactSuccess && <p className="contact-message success" role="status">Your message has been received. Our team will contact you soon.</p>}
+              <button className="button button-dark" disabled={isSending} type="submit">{isSending ? "SENDING..." : "SEND MESSAGE"}</button>
             </form>
           </article>
         )}
