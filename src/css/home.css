@@ -1,37 +1,42 @@
 .home-section {
   width: min(100% - 96px, var(--content-width));
-  margin: 0 auto;
   padding: 96px 0;
+  margin: 0 auto;
 }
 
 .home-section-heading {
   display: flex;
-  align-items: flex-end;
   justify-content: space-between;
+  align-items: flex-end;
   gap: 24px;
-  margin-bottom: 26px;
   padding-bottom: 12px;
   border-bottom: 1px solid var(--border);
+  margin-bottom: 26px;
 }
 
 .home-section-heading h2 {
   margin: 0;
-  font: 800 clamp(32px, 4vw, 46px)/1 "Montserrat", sans-serif;
-  letter-spacing: -.035em;
+  font:
+    800 clamp(32px, 4vw, 46px)/1 "Montserrat",
+    sans-serif;
+  letter-spacing: -0.035em;
 }
 
 .home-section-heading > a {
-  color: var(--accent);
   font-size: 11px;
   font-weight: 800;
-  letter-spacing: .08em;
+  letter-spacing: 0.08em;
+  color: var(--accent);
 }
 
-.home-section-heading > a:hover { text-decoration: underline; }
+.home-section-heading > a:hover {
+  text-decoration: underline;
+}
+
 .home-products {
+  clip-path: inset(0 -100vmax);
   background: var(--white);
   box-shadow: 0 0 0 100vmax var(--white);
-  clip-path: inset(0 -100vmax);
 }
 
 .home-product-grid {
@@ -40,44 +45,64 @@
   gap: 24px;
 }
 
-.home-product-card { min-width: 0; }
+.home-product-card {
+  min-width: 0;
+}
 
 .home-product-image {
   position: relative;
-  aspect-ratio: 3 / 4;
   display: grid;
-  place-items: center;
   overflow: hidden;
+  place-items: center;
+  font:
+    800 15px "Montserrat",
+    sans-serif;
+  letter-spacing: 0.12em;
   color: #9b9da0;
   background: #e8ebee;
-  font: 800 15px "Montserrat", sans-serif;
-  letter-spacing: .12em;
+  aspect-ratio: 3 / 4;
 }
 
 .home-product-image img {
   width: 100%;
   height: 100%;
+  transition: transform 0.45s ease;
   object-fit: cover;
-  transition: transform .45s ease;
 }
 
-.home-product-card:hover .home-product-image img { transform: scale(1.04); }
+.home-product-card:hover .home-product-image img {
+  transform: scale(1.04);
+}
 
 .home-product-image small {
   position: absolute;
   top: 12px;
   left: 12px;
   padding: 7px 9px;
-  color: var(--white);
-  background: var(--black);
   font-size: 9px;
   font-weight: 800;
-  letter-spacing: .08em;
+  letter-spacing: 0.08em;
+  color: var(--white);
+  background: var(--black);
 }
 
-.home-product-copy { position: relative; padding-top: 15px; }
-.home-product-copy h3 { margin: 0; font: 700 19px/1.3 "Montserrat", sans-serif; }
-.home-product-copy p { margin: 7px 0 0; color: var(--muted); font-size: 15px; }
+.home-product-copy {
+  position: relative;
+  padding-top: 15px;
+}
+
+.home-product-copy h3 {
+  margin: 0;
+  font:
+    700 19px/1.3 "Montserrat",
+    sans-serif;
+}
+
+.home-product-copy p {
+  margin: 7px 0 0;
+  font-size: 15px;
+  color: var(--muted);
+}
 
 .home-product-copy button {
   position: absolute;
@@ -85,71 +110,295 @@
   bottom: 0;
   padding: 8px 10px;
   border: 1px solid var(--black);
-  color: var(--white);
-  background: var(--black);
   font-size: 9px;
   font-weight: 800;
-  letter-spacing: .06em;
+  letter-spacing: 0.06em;
+  color: var(--white);
+  background: var(--black);
   opacity: 0;
+  transition:
+    opacity 0.2s ease,
+    transform 0.2s ease,
+    background 0.2s ease;
   transform: translateY(5px);
-  transition: opacity .2s ease, transform .2s ease, background .2s ease;
 }
 
 .home-product-card:hover .home-product-copy button,
-.home-product-copy button:focus-visible { opacity: 1; transform: translateY(0); }
-.home-product-copy button:hover { border-color: var(--accent); background: var(--accent); }
-.home-product-copy button:disabled { border-color: var(--border); color: #777; background: #eee; }
-.home-product-skeleton { aspect-ratio: 3 / 4.55; background: linear-gradient(90deg, #e8eaec 25%, #f6f7f8 50%, #e8eaec 75%); background-size: 200% 100%; animation: home-loading 1.3s infinite; }
-.home-products-message { min-height: 280px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 18px; border: 1px solid var(--border); text-align: center; }
-.home-products-message p { margin: 0; color: var(--muted); }
+.home-product-copy button:focus-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
 
-.home-categories { padding-top: 104px; }
-.category-grid { display: grid; grid-template-columns: repeat(3, 1fr); grid-auto-rows: 310px; gap: 24px; }
-.category-card { position: relative; overflow: hidden; background: #cfd3d6; }
-.category-card-wide { grid-column: span 2; }
-.category-card img { width: 100%; height: 100%; object-fit: cover; filter: saturate(.75); transition: transform .65s ease; }
-.category-card::after { position: absolute; inset: 0; background: linear-gradient(0deg, rgba(0,0,0,.82), rgba(0,0,0,0) 70%); content: ""; }
-.category-card:hover img { transform: scale(1.045); }
-.category-card span { position: absolute; right: 24px; bottom: 22px; left: 24px; z-index: 1; color: var(--white); font: 800 clamp(23px, 3vw, 33px)/1 "Montserrat", sans-serif; letter-spacing: -.03em; text-transform: uppercase; }
+.home-product-copy button:hover {
+  border-color: var(--accent);
+  background: var(--accent);
+}
 
-.endurance-section { padding-top: 12px; }
-.endurance-visual { position: relative; aspect-ratio: 16 / 8; overflow: hidden; background: #222; }
-.endurance-visual > img { width: 100%; height: 100%; object-fit: cover; filter: saturate(.7) contrast(1.05); }
-.endurance-visual::after { position: absolute; inset: 0; background: rgba(0,0,0,.22); content: ""; }
-.endurance-visual > div { position: absolute; inset: 0; z-index: 1; display: grid; place-items: center; align-content: center; gap: 17px; color: var(--white); }
-.endurance-visual p { margin: 0; font: 800 13px "Montserrat", sans-serif; letter-spacing: .14em; }
-.endurance-play { width: 78px; height: 78px; display: grid; place-items: center; padding-left: 5px; border-radius: 50%; color: var(--black); background: var(--accent); font-size: 25px; }
+.home-product-copy button:disabled {
+  border-color: var(--border);
+  color: #777;
+  background: #eee;
+}
 
-.athletes-section { background: var(--white); }
-.athlete-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
-.athlete-card > div { position: relative; aspect-ratio: 1; display: grid; place-items: center; overflow: hidden; background: #e5e7e9; }
-.athlete-card img { width: 100%; height: 100%; object-fit: cover; filter: saturate(.75); transition: transform .6s ease; }
-.athlete-card:hover img { transform: scale(1.04); }
-.athlete-card h3 { margin: 17px 0 5px; font: 800 23px "Montserrat", sans-serif; text-transform: uppercase; }
-.athlete-card p { margin: 0; color: var(--accent); font-size: 11px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
-.buyer-image-fallback { color: #99a0a5; font: 900 82px "Montserrat", sans-serif; }
-.buyer-rank { position: absolute; top: 16px; left: 16px; padding: 9px 11px; color: var(--white); background: var(--black); font: 800 12px "Montserrat", sans-serif; }
-.buyer-skeleton { aspect-ratio: 1 / 1.17; background: linear-gradient(90deg, #e8eaec 25%, #f6f7f8 50%, #e8eaec 75%); background-size: 200% 100%; animation: home-loading 1.3s infinite; }
-.buyers-empty { min-height: 260px; display: flex; flex-direction: column; align-items: center; justify-content: center; border: 1px solid var(--border); text-align: center; }
-.buyers-empty strong { font: 800 23px "Montserrat", sans-serif; }
-.buyers-empty p { margin: 10px 0 0; color: var(--muted); }
+.home-product-skeleton {
+  background: linear-gradient(90deg, #e8eaec 25%, #f6f7f8 50%, #e8eaec 75%);
+  background-size: 200% 100%;
+  animation: home-loading 1.3s infinite;
+  aspect-ratio: 3 / 4.55;
+}
 
-@keyframes home-loading { to { background-position-x: -200%; } }
+.home-products-message {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 18px;
+  min-height: 280px;
+  border: 1px solid var(--border);
+  text-align: center;
+}
+
+.home-products-message p {
+  margin: 0;
+  color: var(--muted);
+}
+
+.home-categories {
+  padding-top: 104px;
+}
+
+.category-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-auto-rows: 310px;
+  gap: 24px;
+}
+
+.category-card {
+  position: relative;
+  overflow: hidden;
+  background: #cfd3d6;
+}
+
+.category-card-wide {
+  grid-column: span 2;
+}
+
+.category-card img {
+  width: 100%;
+  height: 100%;
+  filter: saturate(0.75);
+  transition: transform 0.65s ease;
+  object-fit: cover;
+}
+
+.category-card::after {
+  content: "";
+  position: absolute;
+  background: linear-gradient(0deg, rgba(0, 0, 0, 0.82), rgba(0, 0, 0, 0) 70%);
+  inset: 0;
+}
+
+.category-card:hover img {
+  transform: scale(1.045);
+}
+
+.category-card span {
+  position: absolute;
+  right: 24px;
+  bottom: 22px;
+  left: 24px;
+  z-index: 1;
+  font:
+    800 clamp(23px, 3vw, 33px)/1 "Montserrat",
+    sans-serif;
+  letter-spacing: -0.03em;
+  text-transform: uppercase;
+  color: var(--white);
+}
+
+.endurance-section {
+  padding-top: 12px;
+}
+
+.endurance-visual {
+  position: relative;
+  overflow: hidden;
+  background: #222;
+  aspect-ratio: 16 / 8;
+}
+
+.endurance-visual > video {
+  width: 100%;
+  height: 100%;
+  filter: saturate(0.7) contrast(1.05);
+  object-fit: cover;
+}
+
+.endurance-visual::after {
+  content: "";
+  position: absolute;
+  background: rgba(0, 0, 0, 0.22);
+  inset: 0;
+}
+
+.athletes-section {
+  background: var(--white);
+}
+
+.athlete-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+.athlete-card > div {
+  position: relative;
+  display: grid;
+  overflow: hidden;
+  place-items: center;
+  background: #e5e7e9;
+  aspect-ratio: 1;
+}
+
+.athlete-card img {
+  width: 100%;
+  height: 100%;
+  filter: saturate(0.75);
+  transition: transform 0.6s ease;
+  object-fit: cover;
+}
+
+.athlete-card:hover img {
+  transform: scale(1.04);
+}
+
+.athlete-card h3 {
+  margin: 17px 0 5px;
+  font:
+    800 23px "Montserrat",
+    sans-serif;
+  text-transform: uppercase;
+}
+
+.athlete-card p {
+  margin: 0;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.buyer-image-fallback {
+  font:
+    900 82px "Montserrat",
+    sans-serif;
+  color: #99a0a5;
+}
+
+.buyer-rank {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  padding: 9px 11px;
+  font:
+    800 12px "Montserrat",
+    sans-serif;
+  color: var(--white);
+  background: var(--black);
+}
+
+.buyer-skeleton {
+  background: linear-gradient(90deg, #e8eaec 25%, #f6f7f8 50%, #e8eaec 75%);
+  background-size: 200% 100%;
+  animation: home-loading 1.3s infinite;
+  aspect-ratio: 1 / 1.17;
+}
+
+.buyers-empty {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 260px;
+  border: 1px solid var(--border);
+  text-align: center;
+}
+
+.buyers-empty strong {
+  font:
+    800 23px "Montserrat",
+    sans-serif;
+}
+
+.buyers-empty p {
+  margin: 10px 0 0;
+  color: var(--muted);
+}
+
+@keyframes home-loading {
+  to {
+    background-position-x: -200%;
+  }
+}
 
 @media (max-width: 900px) {
-  .home-section { width: calc(100% - 40px); padding: 72px 0; }
-  .home-product-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .category-grid { grid-template-columns: 1fr 1fr; }
-  .category-card-wide { grid-column: span 1; }
-  .endurance-section { padding-top: 8px; }
+  .home-section {
+    width: calc(100% - 40px);
+    padding: 72px 0;
+  }
+
+  .home-product-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .category-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .category-card-wide {
+    grid-column: span 1;
+  }
+
+  .endurance-section {
+    padding-top: 8px;
+  }
 }
 
 @media (max-width: 620px) {
-  .home-section-heading { align-items: flex-start; }
-  .home-product-grid, .category-grid, .athlete-grid { grid-template-columns: 1fr; }
-  .home-product-image { aspect-ratio: 4 / 4.7; }
-  .home-product-copy button { position: static; width: 100%; margin-top: 13px; opacity: 1; transform: none; }
-  .category-grid { grid-auto-rows: 265px; }
-  .endurance-visual { aspect-ratio: 4 / 3; }
-  .endurance-play { width: 62px; height: 62px; }
+  .home-section-heading {
+    align-items: flex-start;
+  }
+
+  .home-product-grid,
+  .category-grid,
+  .athlete-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .home-product-image {
+    aspect-ratio: 4 / 4.7;
+  }
+
+  .home-product-copy button {
+    position: static;
+    width: 100%;
+    margin-top: 13px;
+    opacity: 1;
+    transform: none;
+  }
+
+  .category-grid {
+    grid-auto-rows: 265px;
+  }
+
+  .endurance-visual {
+    aspect-ratio: 4 / 3;
+  }
+
+  .endurance-play {
+    width: 62px;
+    height: 62px;
+  }
 }

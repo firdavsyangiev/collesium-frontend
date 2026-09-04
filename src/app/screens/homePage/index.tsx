@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useHistory } from "react-router-dom";
+import enduranceVideoFile from "../../../assets/Gymshark Onyx V5.mp4";
 import { getAssetUrl } from "../../../lib/config";
 import { Product, ProductCollection } from "../../../lib/types/product";
 import { TopBuyer } from "../../../lib/types/member";
@@ -42,7 +43,7 @@ const categories = [
   },
 ];
 
-const enduranceImage = "https://lh3.googleusercontent.com/aida-public/AB6AXuDGFbyBHrJNOc2osnkenjjarrMg2Edolbo_0PeQeKiwBclFVI4WR-8u9Do7ezLxZByski-Bjf_0T7U6rNAcClmVLR-pqL3hFN-Ht-Kpbhaa8U3Jo_xVh-xHIILSlyvZscMLgys5oJaLGZRJ4kYeAJlqr7_sUUJl_OyCZvMaDb8EIsdCKvc9wXmuHTVcQnX5fpUwPv_2in1cnO3dqjZQY2zO6SEADdeIwkat4qJAWKa-XGvwyl3z-CU";
+const enduranceVideo = enduranceVideoFile;
 
 function formatPrice(price: number): string {
   return new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(price);
@@ -208,17 +209,15 @@ export default function HomePage() {
       <section className="home-section endurance-section">
         <div className="home-section-heading"><h2>TITAN ENDURANCE</h2></div>
         <div className="endurance-visual">
-          <img src={enduranceImage} alt="Athlete training with Collesium performance gear" />
-          <div>
-            <span className="endurance-play" aria-hidden="true">▶</span>
-            <p>BUILT TO GO BEYOND</p>
-          </div>
+          <video autoPlay muted loop playsInline aria-label="Athlete training with Collesium performance gear">
+            <source src={enduranceVideo} type="video/mp4" />
+          </video>
         </div>
       </section>
 
       <section className="athletes-section">
         <div className="home-section">
-          <div className="home-section-heading"><h2>TOP BUYERS</h2></div>
+          <div className="home-section-heading"><h2>TOP ATHLETES</h2></div>
           {areBuyersLoading ? (
             <div className="athlete-grid">
               {[0, 1, 2].map((item) => <div className="buyer-skeleton" key={item} />)}
