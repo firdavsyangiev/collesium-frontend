@@ -1,5 +1,6 @@
 import { FormEvent, useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
+import communityHeroImage from "../../../assets/community-hero.png";
 import "../../../css/community.css";
 import CommunityService from "../../services/CommunityService";
 
@@ -37,7 +38,7 @@ const questions = [
   },
 ];
 
-const heroImage = "https://lh3.googleusercontent.com/aida-public/AB6AXuCMzpCOLDZfW9a8bEbEb9qlON9MF-vZOs5HQYKtVdBZ0P4ibnaw4jC923Hea4kjcdphXyIBTtaNBADc0I685wVZV3zwvNAd3dpYoWbETqgBjQfoclphT1sVYt0JF4EWkML07rnhMZIzrVhXSLY7uyaGSs9Fmwm341s7nPajJGdNUjN6W5JqXb9gfha-cm9lrIJlXu8CP3Wjmb0PLYipqKGZC1E7B6NG3t84XJ6CU3GLbZlVzEqTr80";
+const heroImage = communityHeroImage;
 
 export default function CommunityPage() {
   const location = useLocation();

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useHistory } from "react-router-dom";
 import enduranceVideoFile from "../../../assets/Gymshark Onyx V5.mp4";
+import gymEquipmentHero from "../../../assets/gym-equipment-hero.webp";
 import { getAssetUrl } from "../../../lib/config";
 import { Product, ProductCollection } from "../../../lib/types/product";
 import { TopBuyer } from "../../../lib/types/member";
@@ -38,7 +39,7 @@ const categories = [
   {
     name: "Training Equipment",
     collection: ProductCollection.EQUIPMENT,
-    image: "https://lh3.googleusercontent.com/aida-public/AB6AXuCT4IUHL-fS1SZliRmgUhAvUNaIX3WBEjuRa04eo9nv06Ak6zWR7UuYav6OsarO7fsdWHbbIkv_Rjv_23sVdNveMHCDPh34rSriCd28YZRJXyoRhWa5mNnxAlpU47dvK6jWih67VQYgl290jnL6fgPP34wPmgFO3GhDp4KjDP6SFa4d-7ANEE65ImCpukaGDpKxyDbC6G82Y8YskBVnFw4iIoJUckedWVILjAJLRjuEVPDIUL9MCTw",
+    image: gymEquipmentHero,
     wide: true,
   },
 ];
