@@ -56,7 +56,6 @@ export default function Header() {
                 ) : (
                   <span>{member.memberNick.charAt(0).toUpperCase()}</span>
                 )}
-                <b>{member.memberNick}</b>
               </NavLink>
               <button type="button" onClick={handleLogout}>LOGOUT</button>
             </div>

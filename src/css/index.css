@@ -141,7 +141,6 @@ button {
 .member-link {
   display: flex;
   align-items: center;
-  gap: 7px;
 }
 
 .member-link > img,
@@ -155,13 +154,6 @@ button {
   color: var(--white);
   background: var(--black);
   object-fit: cover;
-}
-
-.member-link b {
-  overflow: hidden;
-  max-width: 90px;
-  font-size: 10px;
-  text-overflow: ellipsis;
 }
 
 .member-actions > button {
